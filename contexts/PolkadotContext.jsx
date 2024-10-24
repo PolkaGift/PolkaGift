@@ -2,7 +2,6 @@
 import { useState, useEffect, useContext } from "react";
 
 import { ApiPromise, Keyring, WsProvider } from "@polkadot/api";
-import { options } from "@astar-network/astar-api";
 import { getDecodedOutput } from "./services/helpers/output.ts";
 
 import getContract from "./services/getContract";
@@ -42,9 +41,9 @@ export function PolkadotProvider({ children }) {
             if (window.localStorage.getItem("login-type") === "polkadot") {
                 try {
                     const provider = new WsProvider(WS_PROVIDER);
-                    const _api = new ApiPromise(options({ provider }));
-
-                    const { web3Enable, isWeb3Injected, web3Accounts } = require("@polkadot/extension-dapp");
+                    const _api = await ApiPromise.create( {provider});
+    
+                    const { web3Enable, isWeb3Injected, web3Accounts } = await import(  "@polkadot/extension-dapp");
                     await _api.isReady;
                     const extension = await web3Enable("PolkaGift");
                     const injectedAccounts = await web3Accounts();
